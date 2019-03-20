@@ -1,0 +1,49 @@
+<h2>Order</h2>
+
+<table>
+  <thead>
+    <th><%= "Product name" %></th>
+    <th><%= "Quantity" %></th>
+    <th><%= "Price" %></th>
+    <th><%= "Action" %></th>
+  </thead>
+  <tbody>
+    <%= for item <- @order.items do %>
+      <tr>
+        <td>
+          <%= item.product.name %>
+        </td>
+        <td>
+          <%= item.quantity %>
+        </td>
+        <td>
+          <%= ShopWeb.OrderView.display_amount(item.quantity * item.product.price) %>
+        </td>
+        <td>
+          <%= link "+", to: Routes.order_path(@conn, :add_product, @order, item.product), method: :post, class: "button" %>
+          <%= link "-", to: Routes.order_path(@conn, :remove_product, @order, item.product), method: :post, class: "button" %>
+        </td>
+      </tr>
+      <%= if item.total_discount && item.total_discount > 0 do %>
+        <tr>
+          <td></td>
+          <td></td>
+          <td>-<%= ShopWeb.OrderView.display_amount(item.total_discount) %></td>
+          <td></td>
+        </tr>
+      <% end %>
+    <% end %>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>
+        <b>Total:</b>
+        <%= ShopWeb.OrderView.display_amount(@order_total) %>
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link "Products list", to: Routes.product_path(@conn, :index), class: "button" %>
+<%= link "Clean order", to: Routes.order_path(@conn, :delete, @order), method: :delete, class: "button" %>

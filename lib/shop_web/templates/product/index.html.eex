@@ -1,0 +1,31 @@
+<h2>List of products</h2>
+<table>
+  <thead>
+    <th><%= gettext("Name") %></th>
+    <th><%= gettext("Description") %></th>
+    <th><%= gettext("Action") %></th>
+  </thead>
+  <tbody>
+    <%= for product <- @products do %>
+      <tr>
+        <td>
+          <%= product.name %>
+        </td>
+        <td>
+          <%= product.description %>
+        </td>
+        <td>
+          <%= if @order do %>
+            <%= link "Add to order", to: Routes.order_path(@conn, :add_product, @order, product), method: :post, class: "button" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= if @order do %>
+  <%= link "Show order", to: Routes.order_path(@conn, :show, @order), class: "button" %>
+<% else %>
+  <%= link "Create order", to: Routes.order_path(@conn, :create), method: :post, class: "button" %>
+<% end %>
